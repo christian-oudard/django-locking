@@ -13,7 +13,7 @@ def user_may_change_model(fn):
             return HttpResponse(status=401)
         else:
             return fn(request, app, model, *vargs, **kwargs)
-            
+
     return view
 
 def is_lockable(fn):
@@ -26,7 +26,7 @@ def is_lockable(fn):
                 lockable = False
         except ContentType.DoesNotExist:
             lockable = False
-            
+
         if lockable:
             return fn(request, app, model, *vargs, **kwargs)
         else:
@@ -38,5 +38,5 @@ def log(view):
         response = view(*vargs, **kwargs)
         logger.debug("Sending a request: \n\t%s" % (response.content))
         return response
-    
+
     return decorated_view

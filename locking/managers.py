@@ -5,8 +5,8 @@ import datetime
 """
     LOCKED
             if (datetime.today() - self.locked_at).seconds < LOCK_TIMEOUT:
-            
-            
+
+
             self.locked_at < (NOW - TIMEOUT)
 """
 

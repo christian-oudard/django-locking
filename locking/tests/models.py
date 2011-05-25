@@ -3,7 +3,7 @@ from locking import models as locking
 
 class Story(locking.LockableModel):
     content = models.TextField(blank=True)
-    
+
     class Meta:
         verbose_name_plural = 'stories'
 

@@ -35,13 +35,13 @@ def unlock(request, app, model, id):
     # Users who don't have exclusive access to an object anymore may still
     # request we unlock an object. This happens e.g. when a user navigates
     # away from an edit screen that's been open for very long.
-    # When this happens, LockableModel.unlock_for will throw an exception, 
+    # When this happens, LockableModel.unlock_for will throw an exception,
     # and we just ignore the request.
-    # That way, any new lock that may since have been put in place by another 
+    # That way, any new lock that may since have been put in place by another
     # user won't get accidentally overwritten.
     try:
         obj.unlock_for(request.user)
-        obj.save()    
+        obj.save()
         return HttpResponse(status=200)
     except models.ObjectLockedError:
         return HttpResponse(status=403)
@@ -49,7 +49,7 @@ def unlock(request, app, model, id):
 @log
 @user_may_change_model
 @is_lockable
-def is_locked(request, app, model, id):    
+def is_locked(request, app, model, id):
     obj = utils.gather_lockable_models()[app][model].objects.get(pk=id)
 
     response = simplejson.dumps({
