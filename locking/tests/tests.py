@@ -22,14 +22,12 @@ class AppTestCase(TestCase):
         # but after that saving without first unlocking raises an error
         self.story.lock_for(self.user, hard_lock=True)
         self.assertEquals(self.story.lock_type, "hard")
-        self.story.save()
         self.assertRaises(models.ObjectLockedError, self.story.save)
 
     def test_soft_lock(self):
         self.story.lock_for(self.user)
-        self.story.save()
         self.assertEquals(self.story.lock_type, "soft")
-        self.story.save()
+        self.story.save() # no error raised
 
     def test_lock_for(self):
         self.story.lock_for(self.user)
@@ -97,29 +95,6 @@ class AppTestCase(TestCase):
         lockable_models = utils.gather_lockable_models()
         self.assertTrue("story" in lockable_models["tests"])
         self.assertTrue("unlockable" not in lockable_models["tests"])
-
-    def test_locking_bit_when_locking(self):
-        # when we've locked something, we should set an administrative
-        # bit so other developers can know a save will do a lock or
-        # unlock and respond to that information if they so wish.
-        self.story.content = "Blah"
-        self.assertEquals(self.story._state.locking, False)
-        self.story.lock_for(self.user)
-        self.assertEquals(self.story._state.locking, True)
-        self.story.save()
-        self.assertEquals(self.story._state.locking, False)
-
-    def test_locking_bit_when_unlocking(self):
-        # when we've locked something, we should set an administrative
-        # bit so other developers can know a save will do a lock or
-        # unlock and respond to that information if they so wish.
-        self.story.content = "Blah"
-        self.assertEquals(self.story._state.locking, False)
-        self.story.lock_for(self.user)
-        self.story.unlock_for(self.user)
-        self.assertEquals(self.story._state.locking, True)
-        self.story.save()
-        self.assertEquals(self.story._state.locking, False)
 
     def test_unlocked_manager(self):
         self.story.lock_for(self.user)
